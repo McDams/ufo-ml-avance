@@ -1,2 +1,17 @@
 # Données
 data/*.csv
+!data/.gitkeep
+
+# Résultats générés
+outputs/*
+!outputs/.gitkeep
+
+#Juputer
+.ipynb_checkpoints
+
+# Python
+__pycache__/
+*.pyc  
+*.venv/
+venv/
+.env/

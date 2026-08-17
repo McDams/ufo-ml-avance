@@ -31,3 +31,22 @@ Aucune ligne n'a été supprimée : les valeurs présentes mais invalides ont é
 
 Les fichiers `resume_conversions.csv` et `anomalies_conversion.csv` contiennent le détail des échecs de conversion.
 
+## Synthèse de la phase 3
+
+### Règle utilisée
+
+Un relevé est étiqueté comme canular lorsque son commentaire contient au moins un des mots-clés suivants `hoax`, `fake`, `prank`, `joke`, `not real`, `made up` ou `fraud`.
+
+### Résultats
+
+| Indicateur | Valeur |
+|---|---:|
+| Nombre total de relevés analysés | 88679 |
+| Nombre de relevés étiquetés comme canulars | 869 |
+| Proportion de canulars | 0,98 % |
+
+### Limites
+
+Cette cible est une pseudo-étiquette et non une vérité terrain. La règle peut manquer des canulars ne contenant aucun des mots-clés retenus. Elle peut aussi marquer à tort certains commentaires : par exemple, un témoignage peut mentionner une vidéo `fake`, une `joke` ou l'avis d'une autre personne sans affirmer que le signalement est inventé.
+
+La colonne `comments` a servi à fabriquer la cible `is_hoax`. Elle ne devra donc pas être utilisée comme variable d'entrée dans le modèle final : sinon, le modèle utiliserait indirectement l'information ayant servi à produire la réponse, ce qui créerait une fuite de données.

@@ -5,7 +5,7 @@ Ce rapport présente le chargement, la préparation et la modélisation des rele
 
 ---
 
-## Phase 1 — Ouvrir la caisse
+## Synthèse de la phase 1
 
 Le fichier source ne contient pas d'en-têtes. Les 11 colonnes ont donc été nommées à partir du manifeste fourni dans le sujet. Chaque ligne a été contrôlée avant son intégration au jeu de données principal.
 
@@ -23,7 +23,7 @@ La ligne 877 contient 12 champs, alors que le manifeste prévoit exactement 11 c
 
 Si elle était intégrée directement, le commentaire serait interprété comme une date de publication, la date de publication comme une latitude et une valeur supplémentaire resterait sans colonne associée. La ligne a été conservée dans le fichier des lignes problématiques, mais elle n'a pas été intégrée au DataFrame principal car sa structure ne permet pas une affectation fiable des valeurs aux 11 colonnes.
 
-## Phase 2
+## Synthèse de la phase 2
 
 Les colonnes `duration_seconds`, `latitude` et `longitude` ont été converties en valeurs numériques. Les colonnes `datetime` et `date_posted` ont été converties en dates.
 
@@ -50,3 +50,25 @@ Un relevé est étiqueté comme canular lorsque son commentaire contient au moin
 Cette cible est une pseudo-étiquette et non une vérité terrain. La règle peut manquer des canulars ne contenant aucun des mots-clés retenus. Elle peut aussi marquer à tort certains commentaires : par exemple, un témoignage peut mentionner une vidéo `fake`, une `joke` ou l'avis d'une autre personne sans affirmer que le signalement est inventé.
 
 La colonne `comments` a servi à fabriquer la cible `is_hoax`. Elle ne devra donc pas être utilisée comme variable d'entrée dans le modèle final : sinon, le modèle utiliserait indirectement l'information ayant servi à produire la réponse, ce qui créerait une fuite de données.
+
+## Synthèse de la phase 4
+
+Un modèle de régression logistique a été entraîné pour prédire la variable`is_hoax`. Les données ont été séparées aléatoirement en deux parties avec une
+graine fixée à 42 :
+
+- Jeu d'entraînement : 70943 relevés, soit 80 % des données.
+- Jeu de test : 17736 relevés, soit 20 % des données.
+
+Le jeu de test a été mis de côté avant l'entraînement. Il n'a donc pas été vupar le modèle pendant son apprentissage.
+
+| Indicateur sur le jeu de test | Valeur |
+|---|---:|
+| Precision | 1.65% |
+| Recall | 64.37% |
+| Accuracy | 62.07% |
+
+Sur 100 canulars réellement présents dans le jeu de test, le modèle en détecteenviron XX. Sur 100 relevés signalés comme canulars par le modèle, environ XX sont effectivement étiquetés comme canulars selon la règle définie à la phase 3.
+
+> Ce résultat est provisoire. Le modèle utilise la colonne `comments`, alors que
+> la cible `is_hoax` a été construite avec cette même colonne. Cette situation
+> sera contrôlée et corrigée dans la phase 5.

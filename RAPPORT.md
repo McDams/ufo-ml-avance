@@ -25,18 +25,9 @@ Si elle était intégrée directement, le commentaire serait interprété comme 
 
 ## Phase 2
 
-Les colonnes `duration_seconds`, `latitude` et `longitude` ont été converties
-en valeurs numériques. Les colonnes `datetime` et `date_posted` ont été
-converties en dates.
+Les colonnes `duration_seconds`, `latitude` et `longitude` ont été converties en valeurs numériques. Les colonnes `datetime` et `date_posted` ont été converties en dates.
 
-Aucune ligne n'a été supprimée : les valeurs présentes mais invalides ont été
-converties en `NaN` ou `NaT`.
+Aucune ligne n'a été supprimée : les valeurs présentes mais invalides ont été converties en `NaN` ou `NaT`.
 
-Les anomalies observées comprennent :
-1. [Anomalie réelle 1] : [nombre] occurrences.
-2. [Anomalie réelle 2] : [nombre] occurrences.
-3. [Anomalie réelle 3] : [nombre] occurrences.
-4. [Anomalie réelle 4] : [nombre] occurrences.
+Les fichiers `resume_conversions.csv` et `anomalies_conversion.csv` contiennent le détail des échecs de conversion.
 
-Les fichiers `resume_conversions.csv` et `anomalies_conversion.csv` contiennent
-le détail des échecs de conversion.

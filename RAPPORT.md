@@ -72,3 +72,22 @@ Sur 100 canulars réellement présents dans le jeu de test, le modèle en détec
 > Ce résultat est provisoire. Le modèle utilise la colonne `comments`, alors que
 > la cible `is_hoax` a été construite avec cette même colonne. Cette situation
 > sera contrôlée et corrigée dans la phase 5.
+
+## Synthèse de la phase 5
+
+### Audit des informations utilisées
+
+Le modèle initial utilisait notamment le texte du commentaire. Or la cible `is_hoax` a été construite à partir de mots-clés présents dans ce même champ. Le commentaire a donc été retiré du modèle final, ainsi que les colonnes qui en dérivent.
+
+La colonne `date_posted` a aussi été retirée car elle est renseignée après le dépôt du signalement. Elle n'est donc pas garantie au moment où le système doit prédire la classe d'un nouveau relevé.
+
+### Comparaison des résultats
+
+| Version du modèle | Precision | Recall | Accuracy |
+|---|---:|---:|---:|
+| Avec fuite | 1.65% | 64.37% | 62.07% |
+| Sans fuite | 1.69% | 42.53% | 75.13% |
+
+Le premier modèle obtenait ses résultats en utilisant des informations déjà liées à la réponse : la cible était produite à partir du commentaire, et le modèle recevait ce commentaire en entrée. Il ne s'agissait donc pas d'une prédiction réaliste, mais d'une recherche indirecte des mots-clés ayant défini l'étiquette.
+
+Après retrait du commentaire et de la date de publication, le modèle utilise uniquement des informations supposées disponibles lors de la réception du signalement. Les métriques obtenues après ce retrait sont donc plus crédibles, même si elles sont moins élevées.

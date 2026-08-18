@@ -106,3 +106,49 @@ L'accuracy seule ne permet pas d'évaluer correctement ce problème, car les can
 
 La mesure principale présentée au Conseil est le recall de la classe « canular ». Il mesure, parmi tous les canulars réellement présents, combien sont détectés. La precision reste également indispensable : elle indique la fiabilité des alertes et évite de mobiliser inutilement les analystes sur trop
 de faux positifs.
+
+## Phase 7 — Plusieurs témoins, un seul événement
+
+### Règle de regroupement
+
+Deux relevés sont considérés comme appartenant au même événement lorsqu'ils ont la même date et heure d'observation (`datetime`), la même ville (`city`), le même État ou région (`state`) et le même pays (`country`).
+
+Cette règle crée un identifiant d'événement à partir de ces quatre colonnes. Les valeurs manquantes sont remplacées par la valeur technique `<MANQUANT>` afin de ne pas perdre de lignes lors du regroupement.
+
+### Événements avec plusieurs témoins
+
+| Indicateur | Valeur |
+|---|---:|
+| Événements signalés par plus d'un témoin | 1 102 |
+| Nombre de témoins du plus grand événement | 19 |
+| Événements répartis entre train et test avec la découpe aléatoire | 373 |
+| Relevés appartenant à ces événements à cheval | 889 |
+
+Le plus grand événement correspond à des observations effectuées à Tinley Park, dans l'Illinois, le 31 octobre 2004 à 20 h. Les 19 témoignages décrivent principalement des lumières rouges ou orange dans le ciel et sont tous associés au même événement selon la règle retenue.
+
+La découpe aléatoire séparait 889 relevés appartenant à 373 événements entre l'apprentissage et le test. Le modèle pouvait donc être évalué sur des témoignages décrivant un événement dont il avait déjà vu d'autres versions pendant l'entraînement.
+
+### Témoignages identiques
+
+| Indicateur | Valeur |
+|---|---:|
+| Groupes de commentaires identiques | 318 |
+| Lignes appartenant à ces groupes | 885 |
+| Doublons supplémentaires après la première occurrence | 567 |
+
+Les témoignages identiques ont été conservés : un même texte peut correspondre à plusieurs signalements, ou à plusieurs témoins. Ils ne sont pas supprimés automatiquement afin de ne pas perdre de données. En revanche, le regroupement par événement évite qu'un même événement soit réparti entre le jeu
+d'apprentissage et le jeu de test.
+
+Le fichier contient aussi des commentaires identiques associés à des événements différents, par exemple des commentaires standardisés de type `NUFORC Note` ou des descriptions très courtes comme `2 bright lights`. L'identité textuelle seule ne suffit donc pas à définir un événement : les colonnes de date et de localisation restent nécessaires.
+
+### Impact de la découpe
+
+| Découpage | Precision | Recall |
+|---|---:|---:|
+| Découpage aléatoire | 1,69 % | 42,53 % |
+| Découpage par événements | 1,27 % | 49,39 % |
+
+Avec la découpe par événements, la precision diminue de 1,69 % à 1,27 %, tandis que le recall augmente de 42,53 % à 49,39 %. Les métriques changent parce que le jeu de test ne contient plus de témoignages relatifs à des événements déjà vus pendant l'apprentissage. Cette évaluation est donc plus honnête, même si
+la precision reste très faible.
+
+La vérification effectuée avec `GroupShuffleSplit` confirme qu'aucun identifiant d'événement n'est présent à la fois dans le jeu d'entraînement et dans le jeu de test.

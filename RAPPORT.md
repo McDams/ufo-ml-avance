@@ -168,14 +168,14 @@ le moment où le phénomène a été observé.
 
 Les 1 220 relevés sans valeur dans `datetime` ont été conservés dans les données
 globales, mais ils ne peuvent pas être positionnés dans le temps et ne sont donc
-pas utilisés pour cette évaluation temporelle. [22]
+pas utilisés pour cette évaluation temporelle. 
 
 ### Découpage temporel
 
 La date de coupure retenue est le **17 janvier 2012 à 18 h 00**. Toutes les
 observations du jeu d'entraînement sont antérieures à cette date, tandis que
 toutes les observations du jeu de test sont égales ou postérieures à cette
-date. [20][22]
+date. 
 
 | Indicateur | Jeu d'entraînement | Jeu de test |
 |---|---:|---:|
@@ -188,12 +188,12 @@ date. [20][22]
 La dernière observation du jeu d'entraînement, datée du 17 janvier 2012 à
 17 h 35, est strictement antérieure à la première observation du jeu de test,
 datée du 17 janvier 2012 à 18 h 00. La contrainte temporelle est donc
-respectée. [20]
+respectée. 
 
 La proportion de canulars diminue de 0,98 % dans les données anciennes à 0,79 %
 dans les données récentes. La classe positive est donc légèrement moins
 fréquente dans le jeu de test, ce qui peut modifier les performances observées
-et rend la precision particulièrement difficile à obtenir. [20][22]
+et rend la precision particulièrement difficile à obtenir.
 
 ### Résultats du modèle
 
@@ -206,7 +206,7 @@ et rend la precision particulièrement difficile à obtenir. [20][22]
 Sur les 138 canulars présents dans la période récente, le modèle en détecte 67
 et en manque 71. Parmi les 5 340 relevés signalés comme canulars, seuls 67 sont
 effectivement étiquetés comme tels par la règle retenue ; le modèle produit donc
-un grand nombre de faux positifs. [19]
+un grand nombre de faux positifs. 
 
 ### Évolution par rapport à la phase 7
 
@@ -219,4 +219,76 @@ Le passage à une évaluation temporelle fait légèrement diminuer la precision
 le recall. Cette baisse est attendue : le modèle est maintenant évalué sur une
 période plus récente, dont il n'a pas pu observer les signalements pendant son
 apprentissage. Les résultats de la phase 8 sont donc plus représentatifs du
-fonctionnement réel du système sur de futures transmissions. [21]
+fonctionnement réel du système sur de futures transmissions.
+
+## Phase 9 — Les cases vides
+
+### Colonnes étudiées
+
+Les trois colonnes les plus incomplètes sont `country`, `state` et
+`duration_hours_min`.
+
+| Colonne | Nombre de valeurs manquantes | Proportion de valeurs manquantes |
+|---|---:|---:|
+| `country` | 12 365 | 13,94 % |
+| `state` | 7 409 | 8,35 % |
+| `duration_hours_min` | 3 017 | 3,40 % |
+
+La colonne `shape` contient également 2 922 valeurs manquantes, soit 3,30 %,
+mais elle arrive après les trois colonnes retenues pour l'analyse. 
+
+### Lien entre les cases vides et les canulars
+
+| Colonne | Canulars si valeur manquante | Canulars si valeur présente | Écart |
+|---|---:|---:|---:|
+| `country` | 1,213 % | 0,942 % | +0,271 point |
+| `state` | 1,390 % | 0,943 % | +0,447 point |
+| `duration_hours_min` | 2,618 % | 0,922 % | +1,696 point |
+
+Les trois colonnes étudiées montrent une proportion de canulars plus élevée
+lorsque la valeur est absente. L'écart est particulièrement important pour
+`duration_hours_min` : les relevés sans durée écrite par le témoin contiennent
+2,618 % de canulars, contre 0,922 % lorsque cette durée est renseignée. Une
+valeur manquante contient donc une information potentiellement utile pour la
+prédiction et ne doit pas être simplement effacée.
+
+### Traitement retenu
+
+Les valeurs numériques manquantes sont remplacées par la médiane, calculée
+uniquement à partir du jeu d'entraînement. Les valeurs textuelles manquantes
+sont représentées par la catégorie `<MANQUANT>`.
+
+Trois indicateurs binaires ont été ajoutés :
+
+- `country_etait_manquant`
+- `state_etait_manquant`
+- `duration_hours_min_etait_manquant`
+
+Chaque indicateur vaut 1 si la valeur d'origine était manquante et 0 sinon.
+Cette méthode permet de compléter les données pour que le modèle puisse les
+traiter, tout en conservant explicitement la trace de l'absence initiale. Les
+médianes et le vocabulaire textuel sont appris dans le pipeline sur le jeu
+d'entraînement uniquement, ce qui évite d'utiliser des informations du jeu de
+test.
+
+### Résultats du modèle
+
+La découpe temporelle est conservée : le modèle apprend sur 69 967 relevés
+antérieurs au 17 janvier 2012 à 18 h 00, puis il est évalué sur 17 492 relevés
+plus récents.
+
+| Indicateur sur le jeu de test temporel | Valeur |
+|---|---:|
+| Precision | 1,42 % |
+| Recall | 59,42 % |
+| Accuracy | 67,25 % |
+
+La matrice de confusion indique que le modèle détecte 82 des 138 canulars du
+jeu de test, mais manque encore 56 canulars. Il déclenche aussi 5 673 faux
+positifs : beaucoup de relevés non étiquetés comme canulars sont signalés à
+tort. 
+
+Par rapport à la phase 8, le recall passe de 48,55 % à 59,42 %, tandis que la
+precision passe de 1,25 % à 1,42 %. L'ajout des indicateurs de valeurs
+manquantes améliore donc la détection des canulars selon la règle retenue, même
+si le nombre de fausses alertes reste très élevé. 

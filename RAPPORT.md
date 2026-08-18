@@ -99,16 +99,10 @@ l'information disponible dans le relevé.
 
 | Système | Accuracy | Precision sur la classe canular | Recall sur la classe canular |
 |---|---:|---:|---:|
-| Stagiaire : toujours non-canular | XX,XX % | 0,00 % | 0,00 % |
-| Modèle sans fuite | XX,XX % | XX,XX % | XX,XX % |
+| Stagiaire : toujours non-canular | 99.02 % | 0,00 % | 0,00 % |
+| Modèle sans fuite | 75.13% | 1.69% | 42.53% |
 
-L'accuracy seule ne permet pas d'évaluer correctement ce problème, car les
-canulars représentent une minorité des relevés. Le stagiaire peut donc obtenir
-une accuracy élevée en prédisant uniquement la classe majoritaire, tout en ne
-détectant aucun canular.
+L'accuracy seule ne permet pas d'évaluer correctement ce problème, car les canulars représentent une minorité des relevés. Le stagiaire peut donc obtenir une accuracy élevée en prédisant uniquement la classe majoritaire, tout en ne détectant aucun canular.
 
-La mesure principale présentée au Conseil est le recall de la classe
-« canular ». Il mesure, parmi tous les canulars réellement présents, combien
-sont détectés. La precision reste également indispensable : elle indique la
-fiabilité des alertes et évite de mobiliser inutilement les analystes sur trop
+La mesure principale présentée au Conseil est le recall de la classe « canular ». Il mesure, parmi tous les canulars réellement présents, combien sont détectés. La precision reste également indispensable : elle indique la fiabilité des alertes et évite de mobiliser inutilement les analystes sur trop
 de faux positifs.

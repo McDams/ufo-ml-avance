@@ -377,3 +377,59 @@ Les trois durées les plus longues ont été conservées dans le fichier, mais e
 Le cas de Sneads Ferry illustre une limite du parseur : l'expression `saturday april 27 2002`, qui correspond à une date dans le texte libre, a été interprétée à tort comme une durée. Les deux autres valeurs sont également incompatibles avec une observation normale : une durée de 31 ans ou de plus de 900 jours ne peut pas être utilisée telle quelle pour caractériser une apparition ponctuelle.
 
 La décision retenue est de conserver ces valeurs dans les données afin de ne supprimer aucune ligne, mais de les signaler comme valeurs extrêmes. Pour une utilisation dans le modèle, il serait nécessaire de les plafonner ou de les ransformer après avoir défini une règle explicite et reproductible, afin qu'elles ne déforment pas les statistiques ou l'apprentissage.
+
+## Phase 12 — La ville et l'heure
+
+### Traitement des villes
+
+La transmission contient 22 018 villes distinctes. Parmi elles, 14 177 villes n'apparaissent qu'une seule fois. Créer une colonne binaire par ville aurait donc produit un grand nombre de variables très rares, susceptibles de faire apprendre au modèle des villes qu'il ne reverra jamais.
+
+La règle retenue est la suivante : **une ville est conservée comme catégorie distincte seulement si elle apparaît au moins cinq fois dans le jeu d'entraînement ; sinon elle est remplacée par la catégorie `<VILLE_RARE>`.** Les villes absentes sont conservées dans une catégorie spécifique `<MANQUANT>`.
+
+Cette règle est apprise sur le jeu d'entraînement uniquement. Une ville présente dans le test mais jamais vue dans le train est donc automatiquement classée dans
+`<VILLE_RARE>`, ce qui évite une fuite de données.
+
+| Indicateur | Valeur |
+|---|---:|
+| Villes distinctes dans toute la transmission | 22 018 |
+| Villes présentes une seule fois | 14 177 |
+| Seuil de fréquence retenu pour une ville | 5 relevés |
+| Villes conservées depuis le train | 2 796 |
+| Catégories finales de ville dans le train | 2 797 |
+
+La différence entre les 2 796 villes conservées et les 2 797 catégories finales provient de la catégorie `<VILLE_RARE>`. 
+
+### Encodage cyclique de l'heure
+
+L'heure d'observation est encodée par deux variables : `heure_sin` et `heure_cos`. Cet encodage positionne les heures sur un cercle et représente
+correctement le fait que 23 h et minuit sont proches.
+
+| Comparaison | Distance dans l'encodage |
+|---|---:|
+| Entre 23 h et 0 h | 0,261052 |
+| Entre 23 h et 20 h | 0,765367 |
+
+La distance entre 23 h et 0 h est plus faible que celle entre 23 h et 20 h. L'encodage respecte donc la cyclicité de la journée : 23 h est bien plus proche
+de minuit que de 20 h. 
+
+### Traitement de `shape`
+
+La colonne `shape` a été normalisée avant le regroupement des catégories rares. Les valeurs `disk` et `disc` sont regroupées sous `disc`, tandis que `cigar` et
+`cylinder` sont regroupées sous `cylinder`. Les valeurs `changed` et `changing` sont également regroupées sous `changing`. 
+
+Les formes apparaissant moins de cinq fois dans le jeu d'entraînement sont regroupées dans `<FORME_RARE>`. Après normalisation et regroupement, il reste
+23 catégories de forme dans le jeu d'entraînement, incluant les catégories spéciales `<FORME_RARE>` et `<MANQUANT>`. 
+
+### Largeur du tableau
+
+| Étape | Nombre de colonnes |
+|---|---:|
+| Avant prétraitement | 8 |
+| Après prétraitement | 507 |
+
+La largeur finale de 507 colonnes reste contrôlée : elle provient d'un vocabulaire TF-IDF limité à 500 termes, complété par les sept variables
+numériques, dont les deux coordonnées cycliques de l'heure. Le modèle utilise ainsi la ville et la forme sans créer une colonne par ville. [44]
+
+### Résultats du modèle
+
+La découpe temporelle est conservée, avec une date de coupure au 17 janvier 2012 à 18

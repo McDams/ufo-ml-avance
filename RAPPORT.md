@@ -152,3 +152,71 @@ Avec la découpe par événements, la precision diminue de 1,69 % à 1,27 %, tan
 la precision reste très faible.
 
 La vérification effectuée avec `GroupShuffleSplit` confirme qu'aucun identifiant d'événement n'est présent à la fois dans le jeu d'entraînement et dans le jeu de test.
+
+## Phase 8 — L'ordre des choses
+
+### Choix de la date de découpe
+
+La découpe temporelle a été réalisée avec la colonne `datetime`, qui correspond
+à la date et à l'heure de l'observation déclarée par le témoin. Ce choix permet
+d'entraîner le modèle sur des événements anciens, puis de l'évaluer sur des
+observations réellement plus récentes.
+
+La colonne `date_posted` n'a pas été utilisée, car elle correspond à la date de
+publication ou de traitement du dossier par le Bureau. Elle ne représente pas
+le moment où le phénomène a été observé.
+
+Les 1 220 relevés sans valeur dans `datetime` ont été conservés dans les données
+globales, mais ils ne peuvent pas être positionnés dans le temps et ne sont donc
+pas utilisés pour cette évaluation temporelle. [22]
+
+### Découpage temporel
+
+La date de coupure retenue est le **17 janvier 2012 à 18 h 00**. Toutes les
+observations du jeu d'entraînement sont antérieures à cette date, tandis que
+toutes les observations du jeu de test sont égales ou postérieures à cette
+date. [20][22]
+
+| Indicateur | Jeu d'entraînement | Jeu de test |
+|---|---:|---:|
+| Nombre de relevés | 69 967 | 17 492 |
+| Nombre de canulars | 686 | 138 |
+| Proportion de canulars | 0,98 % | 0,79 % |
+| Première date | 11 novembre 1906 | 17 janvier 2012 |
+| Dernière date | 17 janvier 2012 à 17 h 35 | 8 mai 2014 à 18 h 45 |
+
+La dernière observation du jeu d'entraînement, datée du 17 janvier 2012 à
+17 h 35, est strictement antérieure à la première observation du jeu de test,
+datée du 17 janvier 2012 à 18 h 00. La contrainte temporelle est donc
+respectée. [20]
+
+La proportion de canulars diminue de 0,98 % dans les données anciennes à 0,79 %
+dans les données récentes. La classe positive est donc légèrement moins
+fréquente dans le jeu de test, ce qui peut modifier les performances observées
+et rend la precision particulièrement difficile à obtenir. [20][22]
+
+### Résultats du modèle
+
+| Indicateur sur le jeu de test temporel | Valeur |
+|---|---:|
+| Precision | 1,25 % |
+| Recall | 48,55 % |
+| Accuracy | 69,45 % |
+
+Sur les 138 canulars présents dans la période récente, le modèle en détecte 67
+et en manque 71. Parmi les 5 340 relevés signalés comme canulars, seuls 67 sont
+effectivement étiquetés comme tels par la règle retenue ; le modèle produit donc
+un grand nombre de faux positifs. [19]
+
+### Évolution par rapport à la phase 7
+
+| Évaluation | Precision | Recall |
+|---|---:|---:|
+| Phase 7 — Découpage par événements | 1,27 % | 49,39 % |
+| Phase 8 — Découpage temporel | 1,25 % | 48,55 % |
+
+Le passage à une évaluation temporelle fait légèrement diminuer la precision et
+le recall. Cette baisse est attendue : le modèle est maintenant évalué sur une
+période plus récente, dont il n'a pas pu observer les signalements pendant son
+apprentissage. Les résultats de la phase 8 sont donc plus représentatifs du
+fonctionnement réel du système sur de futures transmissions. [21]

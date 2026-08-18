@@ -91,3 +91,24 @@ La colonne `date_posted` a aussi été retirée car elle est renseignée après 
 Le premier modèle obtenait ses résultats en utilisant des informations déjà liées à la réponse : la cible était produite à partir du commentaire, et le modèle recevait ce commentaire en entrée. Il ne s'agissait donc pas d'une prédiction réaliste, mais d'une recherche indirecte des mots-clés ayant défini l'étiquette.
 
 Après retrait du commentaire et de la date de publication, le modèle utilise uniquement des informations supposées disponibles lors de la réception du signalement. Les métriques obtenues après ce retrait sont donc plus crédibles, même si elles sont moins élevées.
+
+## Synthèse de la phase 6
+
+Le modèle du stagiaire prédit toujours « pas canular », quelle que soit
+l'information disponible dans le relevé.
+
+| Système | Accuracy | Precision sur la classe canular | Recall sur la classe canular |
+|---|---:|---:|---:|
+| Stagiaire : toujours non-canular | XX,XX % | 0,00 % | 0,00 % |
+| Modèle sans fuite | XX,XX % | XX,XX % | XX,XX % |
+
+L'accuracy seule ne permet pas d'évaluer correctement ce problème, car les
+canulars représentent une minorité des relevés. Le stagiaire peut donc obtenir
+une accuracy élevée en prédisant uniquement la classe majoritaire, tout en ne
+détectant aucun canular.
+
+La mesure principale présentée au Conseil est le recall de la classe
+« canular ». Il mesure, parmi tous les canulars réellement présents, combien
+sont détectés. La precision reste également indispensable : elle indique la
+fiabilité des alertes et évite de mobiliser inutilement les analystes sur trop
+de faux positifs.

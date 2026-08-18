@@ -157,25 +157,19 @@ La vérification effectuée avec `GroupShuffleSplit` confirme qu'aucun identifia
 
 ### Choix de la date de découpe
 
-La découpe temporelle a été réalisée avec la colonne `datetime`, qui correspond
-à la date et à l'heure de l'observation déclarée par le témoin. Ce choix permet
-d'entraîner le modèle sur des événements anciens, puis de l'évaluer sur des
-observations réellement plus récentes.
+La découpe temporelle a été réalisée avec la colonne `datetime`, qui correspond à la date et à l'heure de l'observation déclarée par le témoin. Ce choix permet
+d'entraîner le modèle sur des événements anciens, puis de l'évaluer sur des observations réellement plus récentes.
 
-La colonne `date_posted` n'a pas été utilisée, car elle correspond à la date de
-publication ou de traitement du dossier par le Bureau. Elle ne représente pas
+La colonne `date_posted` n'a pas été utilisée, car elle correspond à la date de publication ou de traitement du dossier par le Bureau. Elle ne représente pas
 le moment où le phénomène a été observé.
 
-Les 1 220 relevés sans valeur dans `datetime` ont été conservés dans les données
-globales, mais ils ne peuvent pas être positionnés dans le temps et ne sont donc
+Les 1 220 relevés sans valeur dans `datetime` ont été conservés dans les données globales, mais ils ne peuvent pas être positionnés dans le temps et ne sont donc
 pas utilisés pour cette évaluation temporelle. 
 
 ### Découpage temporel
 
-La date de coupure retenue est le **17 janvier 2012 à 18 h 00**. Toutes les
-observations du jeu d'entraînement sont antérieures à cette date, tandis que
-toutes les observations du jeu de test sont égales ou postérieures à cette
-date. 
+La date de coupure retenue est le **17 janvier 2012 à 18 h 00**. Toutes les observations du jeu d'entraînement sont antérieures à cette date, tandis que
+toutes les observations du jeu de test sont égales ou postérieures à cette date. 
 
 | Indicateur | Jeu d'entraînement | Jeu de test |
 |---|---:|---:|
@@ -185,15 +179,11 @@ date.
 | Première date | 11 novembre 1906 | 17 janvier 2012 |
 | Dernière date | 17 janvier 2012 à 17 h 35 | 8 mai 2014 à 18 h 45 |
 
-La dernière observation du jeu d'entraînement, datée du 17 janvier 2012 à
-17 h 35, est strictement antérieure à la première observation du jeu de test,
-datée du 17 janvier 2012 à 18 h 00. La contrainte temporelle est donc
-respectée. 
+La dernière observation du jeu d'entraînement, datée du 17 janvier 2012 à 17 h 35, est strictement antérieure à la première observation du jeu de test,
+datée du 17 janvier 2012 à 18 h 00. La contrainte temporelle est donc respectée. 
 
-La proportion de canulars diminue de 0,98 % dans les données anciennes à 0,79 %
-dans les données récentes. La classe positive est donc légèrement moins
-fréquente dans le jeu de test, ce qui peut modifier les performances observées
-et rend la precision particulièrement difficile à obtenir.
+La proportion de canulars diminue de 0,98 % dans les données anciennes à 0,79 % dans les données récentes. La classe positive est donc légèrement moins
+fréquente dans le jeu de test, ce qui peut modifier les performances observées et rend la precision particulièrement difficile à obtenir.
 
 ### Résultats du modèle
 
@@ -203,10 +193,8 @@ et rend la precision particulièrement difficile à obtenir.
 | Recall | 48,55 % |
 | Accuracy | 69,45 % |
 
-Sur les 138 canulars présents dans la période récente, le modèle en détecte 67
-et en manque 71. Parmi les 5 340 relevés signalés comme canulars, seuls 67 sont
-effectivement étiquetés comme tels par la règle retenue ; le modèle produit donc
-un grand nombre de faux positifs. 
+Sur les 138 canulars présents dans la période récente, le modèle en détecte 67 et en manque 71. Parmi les 5 340 relevés signalés comme canulars, seuls 67 sont
+effectivement étiquetés comme tels par la règle retenue ; le modèle produit donc un grand nombre de faux positifs. 
 
 ### Évolution par rapport à la phase 7
 
@@ -215,18 +203,15 @@ un grand nombre de faux positifs.
 | Phase 7 — Découpage par événements | 1,27 % | 49,39 % |
 | Phase 8 — Découpage temporel | 1,25 % | 48,55 % |
 
-Le passage à une évaluation temporelle fait légèrement diminuer la precision et
-le recall. Cette baisse est attendue : le modèle est maintenant évalué sur une
-période plus récente, dont il n'a pas pu observer les signalements pendant son
-apprentissage. Les résultats de la phase 8 sont donc plus représentatifs du
+Le passage à une évaluation temporelle fait légèrement diminuer la precision et le recall. Cette baisse est attendue : le modèle est maintenant évalué sur une
+période plus récente, dont il n'a pas pu observer les signalements pendant son apprentissage. Les résultats de la phase 8 sont donc plus représentatifs du
 fonctionnement réel du système sur de futures transmissions.
 
 ## Phase 9 — Les cases vides
 
 ### Colonnes étudiées
 
-Les trois colonnes les plus incomplètes sont `country`, `state` et
-`duration_hours_min`.
+Les trois colonnes les plus incomplètes sont `country`, `state` et `duration_hours_min`.
 
 | Colonne | Nombre de valeurs manquantes | Proportion de valeurs manquantes |
 |---|---:|---:|
@@ -234,8 +219,7 @@ Les trois colonnes les plus incomplètes sont `country`, `state` et
 | `state` | 7 409 | 8,35 % |
 | `duration_hours_min` | 3 017 | 3,40 % |
 
-La colonne `shape` contient également 2 922 valeurs manquantes, soit 3,30 %,
-mais elle arrive après les trois colonnes retenues pour l'analyse. 
+La colonne `shape` contient également 2 922 valeurs manquantes, soit 3,30 %, mais elle arrive après les trois colonnes retenues pour l'analyse. 
 
 ### Lien entre les cases vides et les canulars
 
@@ -245,17 +229,13 @@ mais elle arrive après les trois colonnes retenues pour l'analyse.
 | `state` | 1,390 % | 0,943 % | +0,447 point |
 | `duration_hours_min` | 2,618 % | 0,922 % | +1,696 point |
 
-Les trois colonnes étudiées montrent une proportion de canulars plus élevée
-lorsque la valeur est absente. L'écart est particulièrement important pour
-`duration_hours_min` : les relevés sans durée écrite par le témoin contiennent
-2,618 % de canulars, contre 0,922 % lorsque cette durée est renseignée. Une
-valeur manquante contient donc une information potentiellement utile pour la
-prédiction et ne doit pas être simplement effacée.
+Les trois colonnes étudiées montrent une proportion de canulars plus élevée lorsque la valeur est absente. L'écart est particulièrement important pour
+`duration_hours_min` : les relevés sans durée écrite par le témoin contiennent 2,618 % de canulars, contre 0,922 % lorsque cette durée est renseignée. Une
+valeur manquante contient donc une information potentiellement utile pour la prédiction et ne doit pas être simplement effacée.
 
 ### Traitement retenu
 
-Les valeurs numériques manquantes sont remplacées par la médiane, calculée
-uniquement à partir du jeu d'entraînement. Les valeurs textuelles manquantes
+Les valeurs numériques manquantes sont remplacées par la médiane, calculée uniquement à partir du jeu d'entraînement. Les valeurs textuelles manquantes
 sont représentées par la catégorie `<MANQUANT>`.
 
 Trois indicateurs binaires ont été ajoutés :
@@ -264,17 +244,13 @@ Trois indicateurs binaires ont été ajoutés :
 - `state_etait_manquant`
 - `duration_hours_min_etait_manquant`
 
-Chaque indicateur vaut 1 si la valeur d'origine était manquante et 0 sinon.
-Cette méthode permet de compléter les données pour que le modèle puisse les
-traiter, tout en conservant explicitement la trace de l'absence initiale. Les
-médianes et le vocabulaire textuel sont appris dans le pipeline sur le jeu
-d'entraînement uniquement, ce qui évite d'utiliser des informations du jeu de
-test.
+Chaque indicateur vaut 1 si la valeur d'origine était manquante et 0 sinon. Cette méthode permet de compléter les données pour que le modèle puisse les
+traiter, tout en conservant explicitement la trace de l'absence initiale. Les médianes et le vocabulaire textuel sont appris dans le pipeline sur le jeu
+d'entraînement uniquement, ce qui évite d'utiliser des informations du jeu de test.
 
 ### Résultats du modèle
 
-La découpe temporelle est conservée : le modèle apprend sur 69 967 relevés
-antérieurs au 17 janvier 2012 à 18 h 00, puis il est évalué sur 17 492 relevés
+La découpe temporelle est conservée : le modèle apprend sur 69 967 relevés antérieurs au 17 janvier 2012 à 18 h 00, puis il est évalué sur 17 492 relevés
 plus récents.
 
 | Indicateur sur le jeu de test temporel | Valeur |
@@ -283,12 +259,121 @@ plus récents.
 | Recall | 59,42 % |
 | Accuracy | 67,25 % |
 
-La matrice de confusion indique que le modèle détecte 82 des 138 canulars du
-jeu de test, mais manque encore 56 canulars. Il déclenche aussi 5 673 faux
-positifs : beaucoup de relevés non étiquetés comme canulars sont signalés à
-tort. 
+La matrice de confusion indique que le modèle détecte 82 des 138 canulars du jeu de test, mais manque encore 56 canulars. Il déclenche aussi 5 673 faux
+positifs : beaucoup de relevés non étiquetés comme canulars sont signalés à tort. 
 
-Par rapport à la phase 8, le recall passe de 48,55 % à 59,42 %, tandis que la
-precision passe de 1,25 % à 1,42 %. L'ajout des indicateurs de valeurs
-manquantes améliore donc la détection des canulars selon la règle retenue, même
-si le nombre de fausses alertes reste très élevé. 
+Par rapport à la phase 8, le recall passe de 48,55 % à 59,42 %, tandis que la precision passe de 1,25 % à 1,42 %. L'ajout des indicateurs de valeurs
+manquantes améliore donc la détection des canulars selon la règle retenue, même si le nombre de fausses alertes reste très élevé. 
+
+## Phase 10 — La chaîne de traitement du Bureau
+
+### Ordre des traitements
+
+La découpe temporelle est réalisée avant tous les calculs appris depuis les données. Les relevés sont séparés selon `datetime` : le train contient les
+observations les plus anciennes et le test les observations plus récentes.
+
+Les traitements appris sont intégrés dans un `Pipeline` scikit-learn :
+
+- le vocabulaire TF-IDF est appris uniquement sur le jeu d'entraînement ;
+- les médianes utilisées pour compléter les variables numériques manquantes sont calculées uniquement sur le jeu d'entraînement ;
+- le classifieur est entraîné uniquement sur le jeu d'entraînement.
+
+Ainsi, aucune information statistique issue du jeu de test ne participe à l'apprentissage du modèle.
+
+### Répartition temporelle
+
+| Indicateur | Jeu d'entraînement | Jeu de test |
+|---|---:|---:|
+| Nombre de relevés | 69 967 | 17 492 |
+| Nombre de canulars | 686 | 138 |
+| Proportion de canulars | 0,98 % | 0,79 % |
+| Première date | 11 novembre 1906 | 17 janvier 2012 |
+| Dernière date | 17 janvier 2012 à 17 h 35 | 8 mai 2014 à 18 h 45 |
+
+La date de coupure est le **17 janvier 2012 à 18 h 00**. La dernière observation du train est antérieure à la première observation du test, ce qui
+garantit que le modèle ne peut pas apprendre à partir de signalements futurs.
+
+### Résultats du pipeline
+
+| Indicateur sur le jeu de test temporel | Valeur |
+|---|---:|
+| Precision | 1,26 % |
+| Recall | 48,55 % |
+| Accuracy | 69,63 % |
+
+Sur les 138 canulars présents dans le jeu de test, le modèle en détecte 67 et en manque 71. Il signale également 5 242 non-canulars comme canulars : ces
+faux positifs expliquent la precision faible. 
+
+### Démonstration sur un relevé neuf
+
+Un relevé inventé a été soumis directement au pipeline complet, sans effectuer manuellement de conversion, d'imputation, de vectorisation ou de préparation
+supplémentaire.
+
+| Champ | Valeur |
+|---|---|
+| Date et heure | 15 janvier 2015 à 22 h 30 |
+| Ville | Lille |
+| Pays | France (`fr`) |
+| Forme | `light` |
+| Durée | 120 secondes |
+| Latitude / longitude | 50,6292 / 3,0573 |
+| Prédiction | Non-canular |
+| Probabilité estimée de canular | 5,63 % |
+
+Le relevé est passé dans la fonction de préparation, puis dans le prétraitement et le modèle via un seul appel à `predict()` et `predict_proba()`. La chaîne est
+donc réutilisable pour un nouveau signalement entrant. 
+
+Le pipeline produit des résultats proches de ceux obtenus avec la découpe temporelle précédente. Cette stabilité est attendue : la correction principale
+de cette phase concerne l'ordre des traitements et la suppression des fuites liées aux calculs appris sur l'ensemble des données, pas l'ajout de nouvelles
+variables.
+
+## Phase 11 — Combien de temps ça a duré
+
+### Construction d'une durée exploitable
+
+Deux colonnes de durée sont disponibles dans la transmission :
+
+- `duration_seconds`, qui est censée contenir une durée numérique ;
+- `duration_hours_min`, qui contient la durée écrite librement par le témoin.
+
+Une nouvelle colonne `duration_finale_seconds` a été créée. La durée numérique est utilisée lorsqu'elle est strictement positive et cohérente avec le texte.
+Sinon, une durée est extraite de `duration_hours_min` lorsque le texte contient une information interprétable, par exemple `1/2 hour`, `20 minutes` ou `2 hrs`.
+
+Aucune ligne n'a été supprimée pendant le traitement : le fichier contient 88 679 relevés avant et après la création de la durée finale. [36]
+
+### Résultats
+
+| Indicateur | Valeur |
+|---|---:|
+| Relevés dont la durée reste inutilisable | 7 019 |
+| Relevés où les deux colonnes de durée se contredisent | 1 398 |
+| Durée médiane finale | 180 secondes |
+| Durée médiane finale | 3 minutes |
+| Relevés annonçant plus d'une journée d'observation | 222 |
+
+La durée médiane est de 180 secondes, soit 3 minutes. Elle est calculée sur les durées finales exploitables uniquement. [36]
+
+### Anomalies identifiées
+
+| Nature de l'anomalie | Nombre |
+|---|---:|
+| Les deux colonnes donnent des durées contradictoires | 1 398 |
+| Durée finale supérieure à une journée | 222 |
+| Durée finale inutilisable après traitement | 7 019 |
+
+Les contradictions apparaissent par exemple lorsqu'une durée numérique très courte ne correspond pas à une durée textuelle plus longue. Un relevé d'Edna
+indique 20 secondes dans `duration_seconds`, alors que le témoin a écrit `1/2 hour`. La durée textuelle convertie a donc été retenue dans ce cas. [
+
+### Durées extrêmes
+
+Les trois durées les plus longues ont été conservées dans le fichier, mais elles sont considérées comme très suspectes et ne doivent pas être interprétées comme des observations ordinaires.
+
+| Ville | Durée finale | Origine retenue |
+|---|---:|---|
+| Sneads Ferry | 19 095 652 800 secondes | Texte mal interprété comme une durée |
+| Birmingham (Royaume-Uni) | 97 836 000 secondes, soit environ 31 ans | `duration_seconds` |
+| Ottawa (Canada) | 82 800 000 secondes, soit environ 958 jours | `duration_seconds` |
+
+Le cas de Sneads Ferry illustre une limite du parseur : l'expression `saturday april 27 2002`, qui correspond à une date dans le texte libre, a été interprétée à tort comme une durée. Les deux autres valeurs sont également incompatibles avec une observation normale : une durée de 31 ans ou de plus de 900 jours ne peut pas être utilisée telle quelle pour caractériser une apparition ponctuelle.
+
+La décision retenue est de conserver ces valeurs dans les données afin de ne supprimer aucune ligne, mais de les signaler comme valeurs extrêmes. Pour une utilisation dans le modèle, il serait nécessaire de les plafonner ou de les ransformer après avoir défini une règle explicite et reproductible, afin qu'elles ne déforment pas les statistiques ou l'apprentissage.
